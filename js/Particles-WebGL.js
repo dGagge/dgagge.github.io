@@ -19,11 +19,12 @@ SOFTWARE.
 
 var scene, camera, renderer, raycaster, mouse;
 var ParticlesSystem = [ ];
-var INIT_STR = [ "Davide Gaggero", "dagaggero@gmail.com", "Hover over me.", "Try to press a key." ];
+var INIT_STR = [ "Hi! I'm Davide Gaggero", "A Full Stack Developer", "Try to hover over this text", "or press any key.." ];
 var str_index = 0;
 var str = INIT_STR[ str_index ];
 var frame = 1;
 var keyPressed = false;
+var ctx;
 
 function random( min, max ) {
 
@@ -39,10 +40,14 @@ function start() {
 	ParticlesSystem = new PARTICLES_SYSTEM();
 	raycaster = new THREE.Raycaster();
 	mouse = new THREE.Vector3( 9999, 9999, 0 );
+
+	scene.background = new THREE.Color( 0xF5F5F5 );
+
 	camera.position.z = 15;
 	renderer.setSize( window.innerWidth, window.innerHeight );
 
 	document.body.appendChild( renderer.domElement );
+
 	window.addEventListener( 'mousemove', mouseMove, false );
 	window.addEventListener( 'touchmove', touchMove, false );
 	window.addEventListener( 'touchend', touchEnd, false );
@@ -52,8 +57,7 @@ function start() {
 	ctx = canvas.getContext( "2d" );
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
-	ctx.textBaseline = "middle";
-	ctx.textAlign = "center";
+
 	//document.body.appendChild( canvas );
 
 	update();
@@ -154,7 +158,7 @@ function update() {
 
 function PARTICLES_SYSTEM() {
 
-	this.popSize = 5000;
+	this.popSize = 8000;
 	this.particles = [ ];
 
 	this.r1 = 6.55215;
@@ -166,8 +170,8 @@ function PARTICLES_SYSTEM() {
 
 	var _material = new THREE.PointsMaterial( {
 
-		color: 0xffffff,
-		size: 0.02
+		color: 0x3C3D3D,
+		size: 0.08
 
 	} );
 
@@ -242,7 +246,11 @@ function PARTICLES_SYSTEM() {
 
 					( INIT_STR.indexOf( str ) == -1 ) ? str += e.key : str = e.key;
 
-				} else return;
+				}
+
+				else if ( e.keyCode == 46 ) str = "";
+
+				else return;
 
 			} else {
 
@@ -256,10 +264,13 @@ function PARTICLES_SYSTEM() {
 
 		}
 
+		ctx.textBaseline = "middle";
+		ctx.textAlign = "center";
+
 		ctx.fillStyle = 'black';
 		ctx.fillRect( 0, 0, canvas.width, canvas.height );
 		ctx.fillStyle = 'white';
-		ctx.font = "64pt Verdana";
+		ctx.font = "64pt RalewayRegular";
 
 		var fontSize = 64 * ( canvas.width - 200 ) / ctx.measureText( str ).width;
 
@@ -269,7 +280,7 @@ function PARTICLES_SYSTEM() {
 
 		}
 
-		ctx.font = fontSize + "pt Verdana";
+		ctx.font = fontSize + "pt RalewayRegular";
 
 		ctx.fillText( str, canvas.width/2, canvas.height/2 );
 
@@ -419,5 +430,25 @@ function Follow( dist, obj, obj2, mode ) {
 	}
 
 	return new THREE.Vector2( x, y );
+
+}
+
+function recalculate() {
+
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+
+	ParticlesSystem.symbol( str );
+
+}
+
+function help() {
+
+	alert( "Hover over the text to distort the canvas.\r\nAny key -> write on canvas.\r\ndelete -> clear the canvas.\r\n[1-4] -> special shapes" )
 
 }

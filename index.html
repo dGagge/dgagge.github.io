@@ -6,9 +6,10 @@
 	    <script src="js/three.min.js"></script>
 	    <script src="js/Projector.js"></script>
 	    <script src="js/Particles-WebGL.js"></script>
+		<link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/raleway" type="text/css"/>
 	</head>
-	<body onload="start()">
-
+	<body onload="start()" onresize="recalculate()">
+		<span id="about">Contact me at - da.gaggero@gmail.com</span>
 	</body>
 
 	<style>
@@ -24,6 +25,12 @@
 			height: 100% !important;
 		}
 
+		span{
+			position: absolute;
+			bottom:10px;
+			right:10px;
+			font-family: 'RalewayRegular';
+		}
 	</style>
 
 </html>
