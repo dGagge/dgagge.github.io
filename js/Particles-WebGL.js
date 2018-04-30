@@ -19,7 +19,7 @@ SOFTWARE.
 
 var scene, camera, renderer, raycaster, mouse;
 var ParticlesSystem = [ ];
-var INIT_STR = [ "Hi! I'm Davide Gaggero", "A full stack developer", "Try to hover over this text..", "..or to press any key" ];
+var INIT_STR = [ "Hi! I'm Davide Gaggero", "A Front End Developer", "Try to hover over this text..", "..or to press any key!" ];
 var str_index = 0;
 var str = INIT_STR[ str_index ];
 var frame = 1;
