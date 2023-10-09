@@ -155,7 +155,7 @@ function update() {
 
 function PARTICLES_SYSTEM() {
 
-	this.popSize = 8000;
+	this.popSize = 200000;
 	this.particles = [];
 	
 	var counter = 0;
@@ -168,17 +168,23 @@ function PARTICLES_SYSTEM() {
 
 	});
 
-	var _geometry = new THREE.Geometry();
+	var positions = [];
+
+	var _geometry = new THREE.BufferGeometry();
 
 	this.mesh = new THREE.Points(_geometry, _material);
 	this.mesh.geometry.dynamic = true;
 
+
 	for (var i = 0; i < this.popSize; i++) {
 
 		this.particles.push(new Particle(new THREE.Vector3(0, 0, 0)));
-		this.mesh.geometry.vertices.push(this.particles[i].position);
+		positions.push(this.particles[i].position.x, this.particles[i].position.y, this.particles[i].position.z);
 
 	}
+
+	const positionsArray = new Float32Array(positions);
+	this.mesh.geometry.setAttribute('position', new THREE.BufferAttribute(positionsArray, 3));
 
 	scene.add(this.mesh);
 
@@ -280,19 +286,49 @@ function PARTICLES_SYSTEM() {
 
 	}
 
-	this.geometryUpdate = function () {
+	/*this.geometryUpdate = function () {
 
 		for (var i = 0; i < this.popSize; i++) {
 
 			this.particles[i].checkCollision();
 			this.particles[i].move();
-			this.mesh.geometry.vertices[i] = this.particles[i].position;
+			//this.mesh.geometry.vertices[i] = this.particles[i].position;
 
 		}
 
 		this.mesh.geometry.verticesNeedUpdate = true;
 
-	}
+	}*/
+
+	this.geometryUpdate = function () {
+		// Create an array to hold the new positions
+		const newPositions = [];
+	
+		for (let i = 0; i < this.popSize; i++) {
+			this.particles[i].checkCollision();
+			this.particles[i].move();
+			
+			// Add the particle positions to the newPositions array
+			newPositions.push(
+				this.particles[i].position.x,
+				this.particles[i].position.y,
+				this.particles[i].position.z
+			);
+		}
+	
+		// Convert the new positions array to a Float32Array
+		const positionsArray = new Float32Array(newPositions);
+	
+		// Get the positions attribute of your BufferGeometry
+		const positionsAttribute = this.mesh.geometry.getAttribute('position');
+	
+		// Update the positions attribute with the new positions array
+		positionsAttribute.array.set(positionsArray);
+	
+		// Mark the positions attribute as needing an update
+		positionsAttribute.needsUpdate = true;
+	
+	};
 
 }
 
